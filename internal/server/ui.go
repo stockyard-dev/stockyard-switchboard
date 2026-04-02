@@ -1,48 +1,30 @@
 package server
-
 import "net/http"
-
-func (s *Server) dashboard(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	w.Write([]byte(dashHTML))
-}
-
-const dashHTML = `<!DOCTYPE html>
-<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Switchboard</title>
-<style>
-:root{--bg:#1a1410;--bg2:#241e18;--bg3:#2e261e;--rust:#c45d2c;--rl:#e8753a;--leather:#a0845c;--cream:#f0e6d3;--cd:#bfb5a3;--cm:#7a7060;--gold:#d4a843;--green:#4a9e5c;--red:#c44040;--mono:'JetBrains Mono',monospace;--serif:'Libre Baskerville',Georgia,serif}
-*{margin:0;padding:0;box-sizing:border-box}body{background:var(--bg);color:var(--cream);font-family:var(--mono);font-size:13px}
-a{color:var(--rl);text-decoration:none}a:hover{color:var(--gold)}
-.hdr{padding:.7rem 1.2rem;border-bottom:1px solid var(--bg3);display:flex;justify-content:space-between;align-items:center}
-.hdr h1{font-family:var(--serif);font-size:1rem}.hdr h1 span{color:var(--rl)}
-.stats{font-size:.7rem;color:var(--leather)}.stats b{color:var(--cream);font-weight:600}
-.main{max-width:700px;margin:0 auto;padding:1.5rem}
-.card{background:var(--bg2);border:1px solid var(--bg3);padding:.8rem 1rem;margin-bottom:.5rem;display:flex;justify-content:space-between;align-items:center}
-.card-title{font-size:.8rem;font-weight:600}.card-sub{font-size:.65rem;color:var(--cd)}
-.btn{font-family:var(--mono);font-size:.7rem;padding:.3rem .6rem;border:1px solid;cursor:pointer;background:transparent}
-.btn-p{border-color:var(--rust);color:var(--rl)}.btn-p:hover{background:var(--rust);color:var(--cream)}
-.btn-d{border-color:var(--bg3);color:var(--cm)}.btn-d:hover{border-color:var(--red);color:var(--red)}
-input{background:var(--bg);border:1px solid var(--bg3);color:var(--cream);padding:.4rem .6rem;font-family:var(--mono);font-size:.8rem;width:100%;outline:none;margin-bottom:.5rem}
-input:focus{border-color:var(--rust)}
-.empty{text-align:center;padding:2rem;color:var(--cm);font-style:italic;font-family:var(--serif)}
-</style>
+func (s *Server) dashboard(w http.ResponseWriter, r *http.Request) { w.Header().Set("Content-Type","text/html; charset=utf-8"); w.Write([]byte(dashHTML)) }
+const dashHTML = `<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Switchboard</title>
+<style>:root{--bg:#1a1410;--bg2:#241e18;--bg3:#2e261e;--rust:#c45d2c;--rl:#e8753a;--leather:#a0845c;--cream:#f0e6d3;--cd:#bfb5a3;--cm:#7a7060;--gold:#d4a843;--green:#4a9e5c;--red:#c44040;--mono:'JetBrains Mono',Consolas,monospace;--serif:'Libre Baskerville',Georgia,serif}*{margin:0;padding:0;box-sizing:border-box}body{background:var(--bg);color:var(--cream);font-family:var(--mono);font-size:13px;line-height:1.6}.hdr{padding:.6rem 1.2rem;border-bottom:1px solid var(--bg3);display:flex;justify-content:space-between;align-items:center}.hdr h1{font-family:var(--serif);font-size:1rem}.hdr h1 span{color:var(--rl)}.main{max-width:900px;margin:0 auto;padding:1rem 1.2rem}.btn{font-family:var(--mono);font-size:.68rem;padding:.3rem .6rem;border:1px solid;cursor:pointer;background:transparent;transition:.15s}.btn-p{border-color:var(--rust);color:var(--rl)}.btn-p:hover{background:var(--rust);color:var(--cream)}.btn-d{border-color:var(--bg3);color:var(--cm)}.overview{display:flex;gap:1.5rem;margin-bottom:1rem;font-size:.7rem;color:var(--leather)}.overview .stat b{display:block;font-size:1.2rem;color:var(--cream)}.svc-row{display:flex;align-items:center;gap:.6rem;padding:.5rem;border-bottom:1px solid var(--bg3);font-size:.75rem}.svc-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}.svc-dot.up{background:var(--green)}.svc-dot.down{background:var(--red)}.svc-dot.unknown{background:var(--cm)}.svc-name{font-weight:600;flex:1}.svc-url{color:var(--cm);font-size:.68rem}.svc-ver{color:var(--leather);font-size:.65rem}.tag{font-size:.55rem;padding:0 .25rem;background:var(--bg3);color:var(--ll);border-radius:2px}.empty{text-align:center;padding:2rem;color:var(--cm);font-style:italic;font-family:var(--serif)}.modal-bg{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.65);display:flex;align-items:center;justify-content:center;z-index:100}.modal{background:var(--bg2);border:1px solid var(--bg3);padding:1.5rem;width:95%;max-width:500px}.modal h2{font-family:var(--serif);font-size:.9rem;margin-bottom:1rem}label.fl{display:block;font-size:.65rem;color:var(--leather);text-transform:uppercase;letter-spacing:1px;margin-bottom:.2rem;margin-top:.5rem}input[type=text],select{background:var(--bg);border:1px solid var(--bg3);color:var(--cream);padding:.35rem .5rem;font-family:var(--mono);font-size:.78rem;width:100%;outline:none}</style>
 <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital@0;1&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
-</head><body>
-<div class="hdr"><h1><span>Switchboard</span></h1><div class="stats">Total: <b id="ct">-</b></div></div>
-<div class="main">
-<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem">
-<span style="font-size:.65rem;letter-spacing:2px;text-transform:uppercase;color:var(--rust)">All services</span>
-<button class="btn btn-p" onclick="showCreate()">+ New</button>
-</div>
-<div id="list"></div>
-</div>
+</head><body><div class="hdr"><h1><span>Switchboard</span></h1><button class="btn btn-p" onclick="showNew()">+ Service</button></div>
+<div class="main"><div class="overview" id="ov"></div><div id="list"></div></div><div id="modal"></div>
 <script>
-async function load(){const r=await fetch('/api/services');const d=await r.json();document.getElementById('ct').textContent=d.count;
-const el=document.getElementById('list');if(!d.services.length){el.innerHTML='<div class="empty">No services yet.</div>';return}
-el.innerHTML=d.services.map(e=>'<div class="card"><div><div class="card-title">'+esc(e.name||e.title||e.id)+'</div><div class="card-sub">'+esc(e.created_at)+'</div></div><button class="btn btn-d" onclick="del(\''+e.id+'\')">Delete</button></div>').join('')}
-function esc(s){return(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;')}
-function showCreate(){const n=prompt('Name:');if(!n)return;fetch('/api/services',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:n})}).then(load)}
-async function del(id){if(!confirm('Delete?'))return;await fetch('/api/services/'+id,{method:'DELETE'});load()}
-load();setInterval(load,30000)
-</script></body></html>` + "`"
+let svcs=[];async function api(u,o){return(await fetch(u,o)).json()}
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+function timeAgo(d){if(!d)return'never';const s=Math.floor((Date.now()-new Date(d))/1e3);if(s<60)return s+'s ago';if(s<3600)return Math.floor(s/60)+'m ago';return Math.floor(s/3600)+'h ago'}
+async function init(){
+  const[sd,dd]=await Promise.all([api('/api/stats'),api('/api/services')]);svcs=dd.services||[];
+  document.getElementById('ov').innerHTML='<div class="stat"><b>'+sd.total+'</b>Services</div><div class="stat"><b style="color:var(--green)">'+sd.up+'</b>Up</div><div class="stat"><b style="color:var(--red)">'+sd.down+'</b>Down</div>';
+  document.getElementById('list').innerHTML=svcs.length?svcs.map(s=>{
+    const tags=(s.tags||[]).map(t=>'<span class="tag">'+esc(t)+'</span>').join(' ');
+    return'<div class="svc-row"><div class="svc-dot '+s.status+'"></div><span class="svc-name">'+esc(s.name)+'</span><span class="svc-url">'+esc(s.url)+'</span>'+
+    (s.version?'<span class="svc-ver">v'+esc(s.version)+'</span>':'')+tags+
+    '<span style="color:var(--cm);font-size:.6rem">ping '+timeAgo(s.last_ping)+'</span>'+
+    '<span style="cursor:pointer;font-size:.6rem;color:var(--rl)" onclick="ping(\''+s.id+'\')">ping</span>'+
+    '<span style="cursor:pointer;font-size:.6rem;color:var(--cm)" onclick="del(\''+s.id+'\')">del</span></div>'}).join(''):'<div class="empty">No services registered.</div>'
+}
+async function ping(id){await api('/api/services/'+id+'/heartbeat',{method:'POST'});init()}
+async function del(id){await api('/api/services/'+id,{method:'DELETE'});init()}
+function showNew(){document.getElementById('modal').innerHTML='<div class="modal-bg" onclick="if(event.target===this)closeModal()"><div class="modal"><h2>Register Service</h2><label class="fl">Name</label><input type="text" id="ns-name"><label class="fl">URL</label><input type="text" id="ns-url" placeholder="http://localhost:8080"><label class="fl">Version</label><input type="text" id="ns-ver" placeholder="1.0"><label class="fl">Tags (comma-separated)</label><input type="text" id="ns-tags" placeholder="api, production"><div style="display:flex;gap:.5rem;margin-top:1rem"><button class="btn btn-p" onclick="save()">Register</button><button class="btn btn-d" onclick="closeModal()">Cancel</button></div></div></div>'}
+async function save(){const tags=(document.getElementById('ns-tags').value||'').split(',').map(s=>s.trim()).filter(Boolean);const b={name:document.getElementById('ns-name').value,url:document.getElementById('ns-url').value,version:document.getElementById('ns-ver').value,tags,status:'up'};if(!b.name){alert('Name required');return};await api('/api/services',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(b)});closeModal();init()}
+function closeModal(){document.getElementById('modal').innerHTML=''}
+init();setInterval(init,10000)
+</script></body></html>`
