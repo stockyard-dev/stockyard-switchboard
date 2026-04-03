@@ -1,8 +1,8 @@
 package server
 import ("encoding/json";"log";"net/http";"github.com/stockyard-dev/stockyard-switchboard/internal/store")
 type Server struct { db *store.DB; mux *http.ServeMux }
-func New(db *store.DB) *Server {
-	s := &Server{db: db, mux: http.NewServeMux()}
+func New(db *store.DB, limits Limits) *Server {
+	s := &Server{db: db, mux: http.NewServeMux(), limits: limits}
 	s.mux.HandleFunc("GET /api/services", s.list); s.mux.HandleFunc("POST /api/services", s.register)
 	s.mux.HandleFunc("GET /api/services/{id}", s.get); s.mux.HandleFunc("PUT /api/services/{id}", s.update)
 	s.mux.HandleFunc("DELETE /api/services/{id}", s.deregister)
