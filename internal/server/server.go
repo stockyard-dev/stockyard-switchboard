@@ -1,6 +1,6 @@
 package server
 import ("encoding/json";"log";"net/http";"github.com/stockyard-dev/stockyard-switchboard/internal/store")
-type Server struct { db *store.DB; mux *http.ServeMux }
+type Server struct { db *store.DB; mux *http.ServeMux; limits Limits }
 func New(db *store.DB, limits Limits) *Server {
 	s := &Server{db: db, mux: http.NewServeMux(), limits: limits}
 	s.mux.HandleFunc("GET /api/services", s.list); s.mux.HandleFunc("POST /api/services", s.register)
@@ -10,7 +10,7 @@ func New(db *store.DB, limits Limits) *Server {
 	s.mux.HandleFunc("GET /api/discover", s.discover)
 	s.mux.HandleFunc("GET /api/stats", s.stats); s.mux.HandleFunc("GET /api/health", s.health)
 	s.mux.HandleFunc("GET /ui", s.dashboard); s.mux.HandleFunc("GET /ui/", s.dashboard); s.mux.HandleFunc("GET /", s.root)
-s.mux.HandleFunc("GET /api/tier",func(w http.ResponseWriter,r *http.Request){wj(w,200,map[string]any{"tier":s.limits.Tier,"upgrade_url":"https://stockyard.dev/switchboard/"})})
+s.mux.HandleFunc("GET /api/tier",func(w http.ResponseWriter,r *http.Request){writeJSON(w,200,map[string]any{"tier":s.limits.Tier,"upgrade_url":"https://stockyard.dev/switchboard/"})})
 	return s
 }
 func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) { s.mux.ServeHTTP(w, r) }
