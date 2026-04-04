@@ -18,7 +18,7 @@ type Limits struct {
 }
 
 func FreeLimits() Limits {
-	return Limits{MaxItems: 10, Tier: "free"}
+	return Limits{MaxItems: 5, Tier: "free"}
 }
 
 func ProLimits() Limits {
