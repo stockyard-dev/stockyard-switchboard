@@ -29,6 +29,7 @@ func main() {
 	srv := server.New(db, server.DefaultLimits())
 
 	fmt.Printf("\n  Switchboard — Self-hosted service registry\n")
+	fmt.Printf("  Questions? hello@stockyard.dev\n")
 	fmt.Printf("  ─────────────────────────────────\n")
 	fmt.Printf("  Dashboard:  http://localhost:%s/ui\n", port)
 	fmt.Printf("  API:        http://localhost:%s/api\n", port)
