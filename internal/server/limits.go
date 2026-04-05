@@ -28,7 +28,7 @@ func ProLimits() Limits {
 func DefaultLimits() Limits {
 	key := os.Getenv("STOCKYARD_LICENSE_KEY")
 	if key == "" {
-		log.Printf("[license] Free tier (10 items). Set STOCKYARD_LICENSE_KEY for Pro.")
+		log.Printf("[license] Free tier (5 items). Set STOCKYARD_LICENSE_KEY for Pro.")
 		log.Printf("[license] Get a key at https://stockyard.dev/switchboard/")
 		return FreeLimits()
 	}
